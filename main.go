@@ -6,16 +6,16 @@ import (
 )
 
 func main() {
-	var s = ""
+	var s = "abcdefg{("
 	var lex = parse.NewLexer(s)
 
 	for {
-		token,err := lex.NextToken()
-		if err != nil{
-			fmt.Printf("parse err:%s",err)
-			return
+		token := lex.NextToken()
+
+		if token.Type == parse.EOF{
+			break
 		}
 
-		fmt.Printf("token:%+v", token)
+		fmt.Printf("token:%+v\n", token)
 	}
 }

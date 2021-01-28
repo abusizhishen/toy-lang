@@ -5,5 +5,10 @@ type Token struct {
 	Literal string
 }
 
-type TokenType string
-
+type TokenType int
+const (
+	InvalidToken = iota + 1
+	Id
+	Num
+	EOF
+)
