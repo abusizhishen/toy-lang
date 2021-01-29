@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var s = "abcdefg{("
+	var s = "1234"
 	var lex = parse.NewLexer(s)
 
 	for {

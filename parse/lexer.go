@@ -1,5 +1,7 @@
 package parse
 
+import "fmt"
+
 type Lexer struct {
 	position int
 	readPosition int
@@ -41,6 +43,10 @@ func (l *Lexer) NextToken() (Token){
 			return l.readKey()
 		}
 
+		if isNum(l.ch) {
+			return l.readNum()
+		}
+
 		return Token{
 			Type:    InvalidToken,
 			Literal: string(l.ch),
@@ -65,7 +71,27 @@ func (l *Lexer)readKey() Token {
 	}
 }
 
+func (l *Lexer)readNum() Token {
+	var position = l.position
+	for {
+		l.readCh()
+
+		fmt.Printf("ch:%v, idx:%d\n", l.ch,l.position)
+		if !isNum(l.ch){
+			break
+		}
+	}
+
+	return Token{
+		Type:    Num,
+		Literal: l.Str[position:l.readPosition],
+	}
+}
+
 func isWord(ch byte) bool {
 	return ch >= 'a' && ch <= 'Z' || '_' == ch
 }
 
+func isNum(ch byte) bool {
+	return ch >= '0' && ch <= '9'
+}
