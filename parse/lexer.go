@@ -1,7 +1,5 @@
 package parse
 
-import "fmt"
-
 type Lexer struct {
 	position int
 	readPosition int
@@ -25,71 +23,146 @@ func (l *Lexer)readCh()  {
 	l.readPosition +=1
 }
 
-func (l *Lexer) NextToken() (Token){
+func (l *Lexer)readNextCh() byte {
+	if l.readPosition >= l.length{
+		return 0
+	}else {
+		return l.Str[l.readPosition]
+	}
+}
+
+func (l *Lexer) NextToken() Token{
+	l.skipSpace()
 	l.readCh()
+	var tok Token
 	switch l.ch {
 	case '{':
+		tok = Token{
+			Type:    LHkh,
+			Literal: string(l.ch),
+		}
 	case '=':
+		tok = Token{
+			Type:    Assign,
+			Literal: string(l.ch),
+		}
 	case '>':
 	case ';':
+		tok = Token{
+			Type:    FH,
+			Literal: string(l.ch),
+		}
+	case '"':
+		tok = l.readString()
+
 	case 0:
-		return Token{
+		tok = Token{
 			Type:    EOF,
 			Literal: string(l.ch),
 		}
 		
 	default:
 		if isWord(l.ch) {
-			return l.readKey()
+			tok = l.readId()
+			break
 		}
 
 		if isNum(l.ch) {
-			return l.readNum()
+			tok = l.readNum()
+			break
 		}
 
-		return Token{
+		tok =  Token{
 			Type:    InvalidToken,
 			Literal: string(l.ch),
 		}
 	}
-	return Token{}
+
+	return tok
 }
 
-func (l *Lexer)readKey() Token {
+func (l *Lexer)readId() Token {
 	var position = l.position
 	for {
-		l.readCh()
-
 		if !isWord(l.ch){
 			break
 		}
+		l.readCh()
 	}
 
+	var literal = l.Str[position:l.position]
+	if _,ok := keyWordMap[literal];ok{
+		return Token{
+			Type:    TokenType(literal),
+			Literal: literal,
+		}
+	}
 	return Token{
 		Type:    Id,
-		Literal: l.Str[position:l.readPosition],
+		Literal: literal,
 	}
 }
 
 func (l *Lexer)readNum() Token {
 	var position = l.position
 	for {
-		l.readCh()
-
-		fmt.Printf("ch:%v, idx:%d\n", l.ch,l.position)
 		if !isNum(l.ch){
 			break
 		}
+		l.readCh()
 	}
 
 	return Token{
 		Type:    Num,
-		Literal: l.Str[position:l.readPosition],
+		Literal: l.Str[position:l.position],
+	}
+}
+
+func (l *Lexer)readString() Token {
+	var position = l.position
+	l.readCh()
+
+	for {
+		switch l.ch {
+		case '"':
+			l.position++
+			goto end
+		case 0:
+			return Token{
+				Type:    InvalidToken,
+				Literal: l.Str[position:l.position],
+			}
+		case '\\':
+			if l.readNextCh() == '"'{
+				l.readCh()
+			}else {
+				continue
+			}
+		}
+		l.readCh()
+	}
+
+	end:
+
+	return Token{
+		Type:   Str ,
+		Literal: l.Str[position:l.position],
+	}
+}
+
+func (l *Lexer) skipSpace() {
+	for {
+		switch l.readNextCh() {
+		case ' ', '\n','\r','\t':
+			l.readCh()
+		default:
+			return
+		}
 	}
 }
 
 func isWord(ch byte) bool {
-	return ch >= 'a' && ch <= 'Z' || '_' == ch
+	return ch >= 'A' && ch <= 'z' || '_' == ch
 }
 
 func isNum(ch byte) bool {
