@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var s = "1234"
+	var s = `"\""a`
 	var lex = parse.NewLexer(s)
 
 	for {
