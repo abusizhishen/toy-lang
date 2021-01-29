@@ -5,10 +5,28 @@ type Token struct {
 	Literal string
 }
 
-type TokenType int
+type TokenType string
 const (
-	InvalidToken = iota + 1
-	Id
-	Num
-	EOF
+	InvalidToken = "invalid token"
+	Id = "id"
+	Num = "number"
+	EOF = "EOF"
+	Str = "string"
+	EQ = "=="
+	Assign = "="
+	LHkh = "{"
+	RHkh = "}"
+	LYkh = "("
+	RYkh = ")"
+	FH = ";"
+
 )
+
+var keyWordMap = map[string]string{
+	"int":"",
+	"let":"",
+	"fun":"",
+	"type":"",
+	"switch":"",
+	"return":"",
+}
