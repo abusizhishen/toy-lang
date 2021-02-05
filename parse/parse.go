@@ -28,15 +28,38 @@ func (p *Parser) nextToken() {
 func (p *Parser) NextStatement() ast.Statement {
 	tok := p.l.NextToken()
 
-	switch tok {
+	var statement ast.Statement
+	switch tok.Type {
+	case token.RETURN:
+		return p.readAssignStatement()
+	case token.Identify:
+		if p.peekToken.Type == token.EQ {
+			statement = p.readAssignStatement()
+			break
+		}
 
 	}
 
-	return ast.Statement{}
+	return statement
 }
 
-func (p *Parser) Parse() {
+func (p *Parser) Parse() *ast.Statements {
+	var stmts = new(ast.Statements)
 	for {
-		tok := p.l.NextToken()
+		if p.currentToken.Type == token.EOF {
+			break
+		}
 	}
+
+	return stmts
+}
+
+func (p *Parser) readAssignStatement() ast.Statement {
+
+	return ast.AssignStatement{}
+}
+
+func (p *Parser) readReturnStatement() ast.Statement {
+
+	return ast.ReturnStatement{}
 }
