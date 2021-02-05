@@ -124,7 +124,7 @@ func (l *Lexer) readId() token.Token {
 	if _, ok := token.KeyWordMap[literal]; ok {
 		return token.Token{Type: token.KeyWord, Literal: literal}
 	}
-	return token.Token{Type: token.Id, Literal: literal}
+	return token.Token{Type: token.Identify, Literal: literal}
 }
 
 func (l *Lexer) readNum() token.Token {
