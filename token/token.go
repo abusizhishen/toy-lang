@@ -9,7 +9,7 @@ type Type string
 
 const (
 	InvalidToken Type = "invalid token"
-	Id           Type = "id"
+	Identify     Type = "Identify"
 	Num          Type = "number"
 	EOF          Type = "EOF"
 	Str          Type = "string"
@@ -23,7 +23,7 @@ const (
 	RFkh         Type = ")"
 	FH           Type = ";"
 	Not          Type = "!"
-	NEQ          Type = "!Type = "
+	NEQ          Type = "!= "
 	And          Type = "&&"
 	Or           Type = "||"
 	Refer        Type = "&"
@@ -32,6 +32,8 @@ const (
 	Mul          Type = "*"
 	Div          Type = "/"
 	KeyWord           = "keyword"
+
+	RETURN Type = "return"
 )
 
 var KeyWordMap = map[string]string{
